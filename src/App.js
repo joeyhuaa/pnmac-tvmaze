@@ -5,6 +5,7 @@ function App() {
   let [query, setQuery] = useState('')
   let [searchResults, setSearchResults] = useState([])
   let [justFetched, setJustFetched] = useState(false)
+  let [imgsLoaded, setImgsLoaded] = useState({})
 
   useEffect(() => {
     if (query.length > 0) setJustFetched(true)
@@ -39,16 +40,23 @@ function App() {
 
         <div id='search-results'>
           {searchResults.length > 0 &&
-            searchResults.map(s => (
-              // name, img, link (embed in name)
-              <div className='show-card'>
-                <img src={s.show.image ? s.show.image.medium : null} alt={s.show.name}></img>
-                <div style={{display:'block', marginLeft:'30px'}}>
-                  <a href={s.show.url} target="_blank"><h4 className='show-title'>{s.show.name}</h4></a>
-                  <div className='show-summary' dangerouslySetInnerHTML={{ __html: s.show.summary }} />
+            searchResults.map(s => {
+              return (
+                // make img and text load together
+                <div className='show-card'> 
+                  <img 
+                    src={s.show.image ? s.show.image.medium : null} 
+                    alt={s.show.name}
+                    className={imgsLoaded[s.show.id] ? 'visible' : 'hidden'}
+                    onLoad={() => setImgsLoaded({...imgsLoaded, [s.show.id]: true})} 
+                  />
+                  <div style={{display:'block', marginLeft:'30px'}} className={imgsLoaded[s.show.id] ? 'visible' : 'hidden'}>
+                    <a href={s.show.url} target="_blank"><h4 className='show-title'>{s.show.name}</h4></a>
+                    <div className='show-summary' dangerouslySetInnerHTML={{ __html: s.show.summary }} />
+                  </div>
                 </div>
-              </div>
-            ))
+              )
+            })
           }
           {searchResults.length === 0 && justFetched &&
             <h4>No results found :/</h4>
