@@ -49,7 +49,7 @@ function App() {
 
         <div id='search-results'>
           {searchResults.map(s => (
-            // name, img, link (embed in name), lang
+            // name, img, link (embed in name)
             <div className='show-card'>
               <img src={s.show.image.medium}></img>
               <div style={{display:'block', marginLeft:'30px'}}>
